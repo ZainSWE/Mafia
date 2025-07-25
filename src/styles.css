@@ -6,7 +6,7 @@ body {
 }
 
 .temp {
-    display: flexbox;
+    display: flex;
     justify-content: center;
     text-align: center;
     flex-direction: column;
@@ -14,8 +14,49 @@ body {
     margin-top: 40vh;
 }
 
-h1 {
+.mafiaTitle {
     font-size: 5rem;
     padding: 0;
     margin: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+.flip {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+
+    background-color: white;
+    color: black;
+    padding: 3vh;
+    margin: 0;
+    max-width: 30vh;
+    height: 50vh;
+    border-radius: 3vh;
+    font-size: 3vh;
+    cursor: pointer;
+
+    transition: background-color 0.3s ease, color 0.3s ease;
+    transform-style: preserve-3d;
+}
+
+.flip:hover {
+    animation: flip 0.5s ease-in-out;
+    background-color: yellow;
+    color: black;
+}
+
+@keyframes flip {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(180deg);
+    }
 }
