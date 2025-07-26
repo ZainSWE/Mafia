@@ -5,58 +5,181 @@ body {
     margin: 0;
 }
 
-.temp {
+/*Page 1 Contents:*/
+
+.tsbLogoContainer {
     display: flex;
     justify-content: center;
-    text-align: center;
-    flex-direction: column;
-    
-    margin-top: 40vh;
+    margin: 0;
+    padding: 0;
 }
 
-.mafiaTitle {
-    font-size: 5rem;
+.tsbLogo {
+    display: flex;
+    align-items: center;
+    width: 25vh;
+    margin: 0;
+    padding: 0;
+}
+
+.titleScreen {
+    display: flex;
+    justify-content: center;
+    text-align: center; 
+    flex-direction: column;
+    margin-top: 20vh;
+}
+
+.mainTitle {
+    font-size: 13vh;
     padding: 0;
     margin: 0;
 }
 
-.container {
-    display: flex;
-    justify-content: center;
-    perspective: 1000px;
+.subTitle {
+    font-size: 2vh;
+    padding: 0;
+    margin: 0;
 }
 
-.flip {
+.titleScreenButtonsContainer {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    text-align: center;
+    margin: 0;
+    padding: 0;
+}
 
+.titleScreenButtons {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+    list-style-type: none;
+    margin-top: 5vh;
+    max-width: fit-content;
+}
+
+.tsbLinks {
+    text-decoration: none;
+    color: inherit;
+    font: inherit;
+}
+
+.tsbLinks:visited {
+    text-decoration: none;
+    color: inherit;
+
+}
+
+.tsbPlay {
+    font-size: 4vh;
+}
+.tsbRules {
+    font-size: 4vh;
+}
+.tsbCredits {
+    font-size: 4vh;
+}
+.tsbSettings {
+    font-size: 4vh;
+}
+
+.tsbPlay:hover {
+    cursor: pointer;
+    background-color: red;
+    color: black;
+    border-radius: 1.5vh;
+    padding: 0vh 2vh;
+    margin: 0;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.tsbRules:hover {
+    cursor: pointer;
+    background-color: red;
+    color: black;
+    border-radius: 1.5vh;
+    padding: 0vh 2vh;
+    margin: 0;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.tsbCredits:hover {
+    cursor: pointer;
+    background-color: red;
+    color: black;
+    border-radius: 1.5vh;
+    padding: 0vh 2vh;
+    margin: 0;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.tsbSettings:hover {
+    cursor: pointer;
+    background-color: red;
+    color: black;
+    border-radius: 1.5vh;
+    padding: 0vh 2vh;
+    margin: 0;
+    transition: background-color 0.15s ease-in-out;
+}
+
+/*Page 2 [PLAY] Contents:*/
+
+.page2 {
+    background-image: url(assets/woodenTable.png);
+    background-repeat: no-repeat;
+    background-size: auto;
+    overflow: hidden;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.animateHandContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 30vh;
+}
+
+.animateHand {
+    background-color: red;
+    color: black;
+    border: none;
+    padding: 1vh 3vh;
+    font-weight: 600;
+    border-radius: 1.5vh;
+}
+
+.animateHand:hover {
     background-color: white;
     color: black;
-    padding: 3vh;
-    margin: 0;
-    max-width: 30vh;
-    height: 50vh;
-    border-radius: 3vh;
-    font-size: 3vh;
     cursor: pointer;
-
-    transition: background-color 0.3s ease, color 0.3s ease;
-    transform-style: preserve-3d;
+    transition: background-color .2s ease-in-out;
 }
 
-.flip:hover {
-    animation: flip 0.5s ease-in-out;
-    background-color: yellow;
-    color: black;
+.animateHandImageContainer {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
 }
 
-@keyframes flip {
-    from {
-        transform: rotateY(0deg);
-    }
-    to {
-        transform: rotateY(180deg);
-    }
+.animateHandImage {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 40vh;
+    height: 100px;
+    margin-top: 35vh;
+}
+
+.animateHandImage img {
+    width: 100%;
+    height: auto;
+    transition: transform .5s ease, opacity .5s ease;
+    transform: translateY(50vh);
+}
+
+.animateHandImage img.animate {
+    transform: translateY(0);
 }
