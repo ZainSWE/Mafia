@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mafia Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page2">
+    <div class="options">
+        <input id="playerNameJoin" class="roomcode" type="text" placeholder="Username" />
+        <input id="roomCode" class="roomcode" type="text" placeholder="Room code" />
+        <button class="animateHand" onclick="joinGame()">Join Game</button>
+        <br>
+        <br>
+        <input id="playerNameHost" class="roomcode" type="text" placeholder="Username" />
+        <button class="animateHand" onclick="hostGame()">Host Game</button>
+    </div>
+
+    <div class="animateHandContainer">
+        
+    </div>
+    
+</body>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="app.js"></script>
+</html>

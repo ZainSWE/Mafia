@@ -1,0 +1,20 @@
+<!-- game.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Game Room</title>
+</head>
+<body>
+  <h1>Game Room</h1>
+  <p id="roomInfo">Connecting...</p>
+
+    <div id="hostOptions" style="display: none;">
+        <h3>Host Settings</h3>
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="changeRules()">Change Rules</button>
+    </div>
+
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>

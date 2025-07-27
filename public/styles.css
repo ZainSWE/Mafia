@@ -74,6 +74,9 @@ body {
 .tsbPlay {
     font-size: 4vh;
 }
+.tsbHost {
+    font-size: 4vh;
+}
 .tsbRules {
     font-size: 4vh;
 }
@@ -85,6 +88,16 @@ body {
 }
 
 .tsbPlay:hover {
+    cursor: pointer;
+    background-color: red;
+    color: black;
+    border-radius: 1.5vh;
+    padding: 0vh 2vh;
+    margin: 0;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.tsbHost:hover {
     cursor: pointer;
     background-color: red;
     color: black;
@@ -140,6 +153,14 @@ body {
     display: flex;
     justify-content: center;
     margin-top: 30vh;
+}
+
+.options {
+    margin-top: 30vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .animateHand {
