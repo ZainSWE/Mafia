@@ -6,22 +6,46 @@
     <title>Mafia Game</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="page2">
-    <div class="options">
-        <input id="playerNameJoin" class="roomcode" type="text" placeholder="Username" />
-        <input id="roomCode" class="roomcode" type="text" placeholder="Room code" />
-        <button class="animateHand" onclick="joinGame()">Join Game</button>
-        <br>
-        <br>
-        <input id="playerNameHost" class="roomcode" type="text" placeholder="Username" />
-        <button class="animateHand" onclick="hostGame()">Host Game</button>
+<body>
+    <div id="joinHost" class="page2" style="display: block">
+        <div class="options">
+            <input id="playerNameJoin" class="roomcode" type="text" placeholder="Username" />
+            <input id="roomCode" class="roomcode" type="text" placeholder="Room code" />
+            <button class="animateHand" onclick="joinGame()">Join Game</button>
+            <br>
+            <br>
+            <input id="playerNameHost" class="roomcode" type="text" placeholder="Username" />
+            <button class="animateHand" onclick="hostGame()">Host Game</button>
+        </div>
+
+        <div class="animateHandContainer">
+            
+        </div>
     </div>
 
-    <div class="animateHandContainer">
-        
+    <div id="lobby" style="display: none">
+        <h1>Game Room</h1>
+        <p id="roomInfo">Connecting...</p>
+
+        <div id="players">
+        <h2>Players</h2>
+        <ul id="playerList">
+            <!-- Player list will be populated here -->
+        </ul>
+        </div>
+
+        <div id="leaveRoom">
+        <button onclick="leaveRoom()">Leave Room</button>
+        </div>
+
+        <div id="hostOptions" style="display: none;">
+            <h3>Host Settings</h3>
+            <button onclick="startGame()">Start Game</button>
+            <button onclick="changeRules()">Change Rules</button>
+        </div>
     </div>
-    
+    <script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
+    <script src="app.js"></script>
 </body>
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-<script src="app.js"></script>
+
 </html>
