@@ -40,10 +40,27 @@
 
         <div id="hostOptions" style="display: none;">
             <h3>Host Settings</h3>
+            <div>
+                <h2>Game Settings</h2>
+                <p>Discussion Time in Minutes</p>
+                <input type="number" id="discussionTime" step="1" min="1" placeholder="Number" />
+                <p>Number of Murderers</p>
+                <input type="number" id="numMurderers" step="1" min="1" placeholder="Number" />
+                <p>Number of Detectives</p>
+                <input type="number" id="numDetectives" step="1" min="0" placeholder="Number" />
+                <p>Number of Angels</p>
+                <input type="number" id="numAngels" step="1" min="0" placeholder="Number" />
+            </div>
+            <br>
             <button onclick="startGame()">Start Game</button>
-            <button onclick="changeRules()">Change Rules</button>
         </div>
     </div>
+
+    <div id="cardView" style="display: none">
+        <h2>Village</h2>
+        <p id="role"></p>
+    </div>
+    
     <script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
     <script src="app.js"></script>
 </body>
