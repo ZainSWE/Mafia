@@ -204,3 +204,16 @@ body {
 .animateHandImage img.animate {
     transform: translateY(0);
 }
+
+#readyButton {
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 8px;
+    background-color: lightgray;
+  }
+
+#readyButton.ready {
+    background-color: green;
+    color: white;
+    border-radius: 50%; /* make it circular when ready */
+}

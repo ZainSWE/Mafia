@@ -2,6 +2,8 @@ const roomCode = localStorage.getItem('roomCode') || '';
 const isHost = localStorage.getItem('isHost');
 
 let playerCount = 0;
+let isReady = false;
+let nightNumber = 1;
 
 
 let playerId = localStorage.getItem('playerId');
@@ -111,10 +113,34 @@ socket.on('gameStarted', (data) => {
     }
 });
 
+socket.on('startFirstNight', () => {
+    console.log(`Night number ${nightNumber} started`);
+
+    document.getElementById("cardView").style.display = "none";
+    document.getElementById("night").style.display = "block";
+})
+
 
 window.addEventListener("beforeunload", function (e) {
     // Standard message is ignored by most modern browsers,
     // but returning a string triggers a confirmation dialog.
     e.preventDefault(); // Some browsers require this for the alert to work
     e.returnValue = ''; // Required for Chrome and some others
-  });
+});
+
+
+const readyButton = document.getElementById("readyButton");
+const statusText = document.getElementById("statusText");
+
+readyButton.addEventListener("click", () => {
+    isReady = !isReady;
+
+    // Toggle visual class
+    readyButton.classList.toggle("ready", isReady);
+
+    // Update button text
+    readyButton.textContent = isReady ? "Ready ✅" : "Ready Up";
+
+    // Send ready status to server
+    socket.emit("playerReady", { roomCode, playerId, ready: isReady, phase: "night" });
+});

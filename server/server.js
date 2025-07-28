@@ -177,11 +177,28 @@ io.on("connection", (socket) => {
         }
 
         console.log("Updated current room:", rooms[roomCode].players);
-
+ 
         for(let i = 0; i < playerCount; i++) {
             const playerId = shuffledIds[i];
             const playerSocketId = playersObj[playerId].socketId;
             io.to(playerSocketId).emit('gameStarted', { roomCode, role: playersObj[playerId].role });
+        }
+    });
+
+    socket.on('playerReady', ({ roomCode, playerId, ready, phase }) => {
+        console.log(`Player ${playerId} is ${ready ? 'ready' : 'not ready'} in room ${roomCode}`);
+        if (!rooms[roomCode]) return;
+
+        // Set ready status for the player
+        const room = rooms[roomCode];
+        room.players[playerId].ready = ready;
+
+        const allReady = Object.values(room.players).every(p => p.ready);
+
+        if (allReady) {
+        // Broadcast phase change to all players in the room
+        console.log(`All players are ready in room ${roomCode}. Starting ${phase} phase.`);
+        io.to(roomCode).emit("startFirstNight");
         }
     });
 });
