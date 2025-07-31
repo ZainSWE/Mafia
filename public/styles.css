@@ -217,3 +217,13 @@ body {
     color: white;
     border-radius: 50%; /* make it circular when ready */
 }
+
+.selected {
+    background-color: #4CAF50; /* Green background */
+    color: white;              /* White text */
+    border: 2px solid #388E3C; /* Darker green border */
+    font-weight: bold;         /* Emphasize the text */
+    box-shadow: 0 0 5px #388E3C; /* Subtle glow */
+    transform: scale(1.05);    /* Slight zoom for emphasis */
+    transition: all 0.2s ease;
+}

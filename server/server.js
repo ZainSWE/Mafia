@@ -146,8 +146,17 @@ io.on("connection", (socket) => {
         rooms[roomCode].numMurderers = numMurderers;
         rooms[roomCode].numDetectives = numDetectives; 
         rooms[roomCode].numAngels = numAngels;
+        rooms[roomCode].actions = []; // Reset actions for the new game
 
         console.log(`Game started in room ${roomCode} with discussionTime: ${discussionTime}, numMurderers: ${numMurderers}, numDetectives: ${numDetectives}, numAngels: ${numAngels}`);
+
+        for (let playerId in rooms[roomCode].players) {
+            const player = rooms[roomCode].players[playerId];
+            player.isAlive = true; // Reset player status
+            player.hasSubmittedAction = false; // Reset action submission status
+            player.role = null; // Reset role
+            player.ready = false; // Reset ready status
+        }
 
         let playerCount = Object.keys(rooms[roomCode].players).length;
 
@@ -196,9 +205,34 @@ io.on("connection", (socket) => {
         const allReady = Object.values(room.players).every(p => p.ready);
 
         if (allReady) {
-        // Broadcast phase change to all players in the room
-        console.log(`All players are ready in room ${roomCode}. Starting ${phase} phase.`);
-        io.to(roomCode).emit("startFirstNight");
+            // Broadcast phase change to all players in the room
+            console.log(`All players are ready in room ${roomCode}. Starting ${phase} phase.`);
+            io.to(roomCode).emit("startFirstNight");
+            startNightPhase(roomCode); // Start the night phase
+            room.night = 1;
+            sendTurnToRole(roomCode, "m");
+        }
+    });
+
+    socket.on("submitAction", ({ roomCode, target }) => {
+        const player = rooms[roomCode].players[socketToPlayerId[socket.id].playerId];
+        const room = rooms[roomCode];
+
+        // Store their action
+        room.actions.push({
+            from: player.name,
+            role: player.role,
+            target
+        });
+
+        player.hasSubmittedAction = true;
+
+        // Check if all players of this role have submitted
+        if (allRolePlayersSubmitted(room, player.role)) {
+            // Proceed to next role or resolve if last
+            if (player.role === "m") sendTurnToRole(roomCode, "d");
+            else if (player.role === "d") sendTurnToRole(roomCode, "a");
+            else resolveNightPhase(roomCode);
         }
     });
 });
@@ -213,6 +247,102 @@ function shuffle(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
+}
+
+function startNightPhase(roomCode) {
+    const room = rooms[roomCode];
+    console.log(`Starting night phase for room ${roomCode}`);
+
+    for (let playerId in room.players) {
+        const player = room.players[playerId];
+        console.log(`Current playerId: ${playerId}, Player is alive: ${player.isAlive}`);
+        if (!player.isAlive) continue;
+
+        const alivePlayers = Object.entries(room.players)
+        .filter(([id, p]) => p.isAlive)
+        .map(([id, p]) => ({ id, name: p.name }));
+
+        const sameRolePlayers = Object.entries(room.players)
+        .filter(([id, p]) => p.role === player.role && p.isAlive)
+        .map(([id, p]) => ({ id, name: p.name }));
+
+        console.log(`Sending night phase info to player ${playerId} with socket ${player.socketId} in room ${roomCode}`);
+
+        io.to(player.socketId).emit("nightPhaseInfo", {
+            role: player.role,
+            alivePlayers,
+            sameRolePlayers
+        });
+    }
+}
+
+function sendTurnToRole(roomCode, role) {
+  const room = rooms[roomCode];
+
+  for (let playerId in room.players) {
+    const player = room.players[playerId];
+    if (player.role === role) {
+      io.to(player.socketId).emit("yourTurn",  role );
+    } else {
+      io.to(player.socketId).emit("waitForTurn",  role );
+    }
+  }
+}
+
+function allRolePlayersSubmitted(room, role) {
+  for (const playerId in room.players) {
+    const player = room.players[playerId];
+    if (player.role === role && !player.hasSubmittedAction) {
+      return false; // Found a role player who hasn’t submitted yet
+    }
+  }
+  return true; // All role players have submitted
+}
+
+function resolveNightPhase(roomCode) {
+    const room = rooms[roomCode];
+    console.log(`Resolving night phase for room ${roomCode}`);
+
+    const actions = room.actions;
+
+    room.actions = []; // Reset actions for next night
+
+    const killTargets = new Set();     // All players selected to be killed
+    const protectedTargets = new Set(); // All players selected to be protected
+
+    for (const action of actions) {
+        if (action.role === "m") {
+            killTargets.add(action.target);
+            console.log(`Murderer ${action.from} killed ${room.players[action.target].name}`);
+        } else if (action.role === "a") {
+            protectedTargets.add(action.target);
+            console.log(`Angel ${action.from} saved ${room.players[action.target].name}`);
+        } else if (action.role === "d") {
+            console.log(`Detective ${action.from} checked ${room.players[action.target].name}`);
+        }   
+    }
+
+    const killedPlayers = [];
+    const protectedPlayers = [];
+
+    for (let targetId of killTargets) {
+        if (!protectedTargets.has(targetId)) {
+            const target = room.players[targetId];
+            if (target && target.isAlive) {
+                target.isAlive = false;
+                killedPlayers.push(target.name);
+            }
+        }
+        else {
+            console.log(`Player ${targetId} was protected by an angel.`);
+            protectedPlayers.push(targetId);
+        }
+    }
+
+    console.log(`Killed players: ${killedPlayers.join(', ')}`);
+    console.log(`Protected players: ${protectedPlayers.join(', ')}`);
+
+    // Notify all players about the results
 }
 
 const PORT = 3000;

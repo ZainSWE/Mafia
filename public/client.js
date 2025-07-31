@@ -120,6 +120,113 @@ socket.on('startFirstNight', () => {
     document.getElementById("night").style.display = "block";
 })
 
+socket.on('yourTurn', ( role ) => {
+    console.log("Its your turn with role:", role);
+    showActionUI(role);
+});
+
+socket.on('waitForTurn', ( role ) => {
+    showActionUI('c');
+
+    switch(role){
+        case 'm':
+            document.getElementById("currentTurn").innerText = 'It is the murderers turn';
+            break;
+        case 'd':
+            document.getElementById("currentTurn").innerText = 'It is the detectives turn';
+            break;
+        case 'a':
+            document.getElementById("currentTurn").innerText = 'It is the angels turn';
+            break;
+    }
+});
+
+let selectedPlayerId = null;
+
+socket.on("nightPhaseInfo", ({ role, alivePlayers, sameRolePlayers }) => {
+    console.log("Alive players:", alivePlayers);
+    console.log("Same role players:", sameRolePlayers);
+    console.log("My playerId:", playerId);
+
+    document.getElementById("roleInfo").innerText =
+        `You are working with: ` +
+        sameRolePlayers.map(p => p.name).join(", ");
+
+    const playerListDiv = document.getElementById("playerList2");
+    playerListDiv.innerHTML = ""; // clear previous entries
+    console.log("playerListDiv:", playerListDiv);
+
+    alivePlayers.forEach(player => {
+        // Skip showing self
+        if (player.id === playerId) return;
+
+        // Skip showing players with the same role 
+        const isSameRole = sameRolePlayers.some(p => p.id === player.id);
+        if (isSameRole) return;
+        
+        const btn = document.createElement("button");
+        btn.innerText = player.name;
+        btn.onclick = () => {
+            try {
+                selectedPlayerId = player.id;
+                highlightSelection(player.id);
+                console.log(`Selected player: ${player.name} (ID: ${player.id})`);
+            } catch (err) {
+                console.error("Error during button click assignment:", err);
+            }
+        };
+        console.log(`Adding player button for: ${player.name} (ID: ${player.id})`);
+        playerListDiv.appendChild(btn);
+    });
+});
+
+document.getElementById("submitAction").onclick = () => {
+    if (!selectedPlayerId) {
+        alert("Choose a player first!");
+        return;
+    }
+
+    socket.emit("submitAction", { roomCode, target: selectedPlayerId });
+};
+
+function showActionUI(role){
+    console.log("Action shown for:", role)
+    switch(role){
+        case 'm':
+            document.getElementById("roleAction").innerText = 'You are a murderer! Choose someone to kill!'
+            document.getElementById("currentTurn").style.display = "none";
+            document.getElementById("roleDisplay").style.display = "block";
+            break;
+        case 'd':
+            document.getElementById("roleAction").innerText = 'You are a detective! Choose someone to investigate!'
+            document.getElementById("currentTurn").style.display = "none";
+            document.getElementById("roleDisplay").style.display = "block";
+            break;
+        case 'a':
+            document.getElementById("roleAction").innerText = 'You are an angel! Choose someone to protect!'
+            document.getElementById("currentTurn").style.display = "none";
+            document.getElementById("roleDisplay").style.display = "block";
+            break;
+        case 'c':
+            document.getElementById("roleDisplay").style.display = "none";
+            document.getElementById("currentTurn").style.display = "block";
+            break;
+    }
+}
+
+function highlightSelection(selectedId) {
+  const buttons = document.querySelectorAll("#playerList button");
+
+  buttons.forEach(btn => {
+    // Remove previous highlights
+    btn.classList.remove("selected");
+
+    // Highlight only the selected one
+    if (btn.dataset.playerId === selectedId) {
+      btn.classList.add("selected");
+    }
+  });
+}
 
 window.addEventListener("beforeunload", function (e) {
     // Standard message is ignored by most modern browsers,
