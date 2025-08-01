@@ -63,6 +63,11 @@ window.startGame = function() {
         return;
     }
 
+    if(playerCount < 3) {
+        alert("You need at least 3 players to start the game.");
+        return;
+    }
+
     socket.emit('startGame', {roomCode, discussionTime, numMurderers, numDetectives, numAngels});
 }
 
