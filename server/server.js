@@ -235,6 +235,13 @@ io.on("connection", (socket) => {
             else resolveNightPhase(roomCode);
         }
     });
+
+    socket.on('investigatePlayer', ({ roomCode, target }, callback) => {
+        const player = rooms[roomCode].players[target];
+
+        // Here you can send the result back to the detective
+        callback({ success: true, role: player.role, name: player.name });
+    });
 });
 
 function generateRoomCode() {

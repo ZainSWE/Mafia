@@ -187,10 +187,29 @@ socket.on("nightPhaseInfo", ({ role, alivePlayers, sameRolePlayers }) => {
     });
 });
 
+let investigatedPlayer = false;
+
 document.getElementById("submitAction").onclick = () => {
     if (!selectedPlayerId) {
         alert("Choose a player first!");
         return;
+    }
+
+    if( localStorage.getItem('role') === 'd' && !investigatedPlayer) {
+        socket.emit("investigatePlayer", { roomCode, target: selectedPlayerId }, (response) => {
+            document.getElementById("investigateSection").innerText = `You investigated ${response.name} and found out they are a ${response.role}, click submit to continue.`;
+            document.getElementById("investigateSection").style.display = "block";
+            document.getElementById("playerList2").style.display = "none";
+        });
+
+        investigatedPlayer = true;
+        return;
+    }
+    else {
+        document.getElementById("investigateSection").style.display = "none";
+        document.getElementById("playerList2").style.display = "block";
+
+        investigatedPlayer = false;
     }
 
     document.getElementById("currentTurn").innerText = 'Waiting for other players...';
