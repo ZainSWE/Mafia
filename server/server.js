@@ -230,8 +230,8 @@ io.on("connection", (socket) => {
         // Check if all players of this role have submitted
         if (allRolePlayersSubmitted(room, player.role)) {
             // Proceed to next role or resolve if last
-            if (player.role === "m") sendTurnToRole(roomCode, "d");
-            else if (player.role === "d") sendTurnToRole(roomCode, "a");
+            if (player.role === "m" && room.numDetectives > 0) sendTurnToRole(roomCode, "d");
+            else if ((player.role === "d" || player.role ==="m") && room.numAngels > 0) sendTurnToRole(roomCode, "a");
             else resolveNightPhase(roomCode);
         }
     });

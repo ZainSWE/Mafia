@@ -171,15 +171,17 @@ socket.on("nightPhaseInfo", ({ role, alivePlayers, sameRolePlayers }) => {
         
         const btn = document.createElement("button");
         btn.innerText = player.name;
+
         btn.onclick = () => {
             try {
                 selectedPlayerId = player.id;
-                highlightSelection(player.id);
+                highlightSelection(player.name);
                 console.log(`Selected player: ${player.name} (ID: ${player.id})`);
             } catch (err) {
                 console.error("Error during button click assignment:", err);
             }
         };
+
         console.log(`Adding player button for: ${player.name} (ID: ${player.id})`);
         playerListDiv.appendChild(btn);
     });
@@ -190,6 +192,10 @@ document.getElementById("submitAction").onclick = () => {
         alert("Choose a player first!");
         return;
     }
+
+    document.getElementById("currentTurn").innerText = 'Waiting for other players...';
+    document.getElementById("roleDisplay").style.display = "none";
+    document.getElementById("currentTurn").style.display = "block";
 
     socket.emit("submitAction", { roomCode, target: selectedPlayerId });
 };
@@ -219,15 +225,15 @@ function showActionUI(role){
     }
 }
 
-function highlightSelection(selectedId) {
-  const buttons = document.querySelectorAll("#playerList button");
+function highlightSelection(playerName) {
+  const buttons = document.querySelectorAll("#playerList2 button");
 
   buttons.forEach(btn => {
     // Remove previous highlights
     btn.classList.remove("selected");
 
     // Highlight only the selected one
-    if (btn.dataset.playerId === selectedId) {
+    if (btn.innerText.trim() === playerName.trim()) {
       btn.classList.add("selected");
     }
   });
