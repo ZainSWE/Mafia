@@ -207,7 +207,6 @@ io.on("connection", (socket) => {
         if (allReady) {
             // Broadcast phase change to all players in the room
             console.log(`All players are ready in room ${roomCode}. Starting ${phase} phase.`);
-            io.to(roomCode).emit("startFirstNight");
             startNightPhase(roomCode); // Start the night phase
             room.night = 1;
             sendTurnToRole(roomCode, "m");
@@ -350,6 +349,37 @@ function resolveNightPhase(roomCode) {
     console.log(`Protected players: ${protectedPlayers.join(', ')}`);
 
     // Notify all players about the results
+    let alivePlayers = Object.entries(room.players)
+        .filter(([id, p]) => p.isAlive)
+        .map(([id, p]) => ({ id, name: p.name }));
+    
+    let message = "";
+
+    for(let targetId of killTargets) {
+        if (!protectedTargets.has(targetId)) {
+            message += `${room.players[targetId].name} was killed!\n`;
+        } else {
+            message += `${room.players[targetId].name} was killed but an angel saved them!\n`;
+        }
+    }
+
+    for(let player of Object.values(room.players)){
+        if (player.isAlive) {
+            io.to(player.socketId).emit("dayPhaseInfo", {
+                message: message || "No players were killed last night.",
+                discussionTime: room.discussionTime,
+                alivePlayers,
+                isAlive: player.isAlive
+            });
+        } else {
+            io.to(player.socketId).emit("dayPhaseInfo", {
+                message: message || "No players were killed last night.",
+                discussionTime: room.discussionTime,
+                alivePlayers,
+                isAlive: player.isAlive
+            });
+        }
+    }
 }
 
 const PORT = 3000;

@@ -80,7 +80,24 @@
     </div>
 
     <div id="day" style="display: none">
-        
+        <div id="discussion">
+            <div id="discussionTimer"></div>
+            <p id="discussionMessage"></p>
+        </div>
+
+        <div id="voting" style="display: none">
+            <h2>Voting phase</h2>
+            <div id="voteDisplay">
+                <h3>Vote for a player to eliminate</h3>
+                <div id="votingList"></div>
+                <button id="submitVote">Submit Vote</button>
+                <h2>Warning: If you click Submit you cannot change your vote!</h2>
+            </div>
+        </div>
+    </div>
+
+    <div id="dead" style="display: none">
+
     </div>
     
     <script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>

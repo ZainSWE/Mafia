@@ -4,6 +4,7 @@ const isHost = localStorage.getItem('isHost');
 let playerCount = 0;
 let isReady = false;
 let nightNumber = 1;
+let isAliveStatus = true;
 
 
 let playerId = localStorage.getItem('playerId');
@@ -118,13 +119,6 @@ socket.on('gameStarted', (data) => {
     }
 });
 
-socket.on('startFirstNight', () => {
-    console.log(`Night number ${nightNumber} started`);
-
-    document.getElementById("cardView").style.display = "none";
-    document.getElementById("night").style.display = "block";
-})
-
 socket.on('yourTurn', ( role ) => {
     console.log("Its your turn with role:", role);
     showActionUI(role);
@@ -149,6 +143,13 @@ socket.on('waitForTurn', ( role ) => {
 let selectedPlayerId = null;
 
 socket.on("nightPhaseInfo", ({ role, alivePlayers, sameRolePlayers }) => {
+    console.log(`Night number ${nightNumber} started`);
+
+    document.getElementById("cardView").style.display = "none";
+    document.getElementById("day").style.display = "none";
+    document.getElementById("night").style.display = "block";
+
+
     console.log("Alive players:", alivePlayers);
     console.log("Same role players:", sameRolePlayers);
     console.log("My playerId:", playerId);
@@ -186,6 +187,76 @@ socket.on("nightPhaseInfo", ({ role, alivePlayers, sameRolePlayers }) => {
         playerListDiv.appendChild(btn);
     });
 });
+
+socket.on("dayPhaseInfo", ({message, discussionTime, alivePlayers, isAlive}) => {
+    if( !isAlive ) {
+        document.getElementById("dead").style.display = "block";
+        document.getElementById("dead").innerText = "You are dead! You can no longer participate in the game.";
+        document.getElementById("voteDisplay").style.display = "none";
+        isAliveStatus = false;
+    }
+
+    document.getElementById("day").style.display = "block";
+    document.getElementById("night").style.display = "none";
+    document.getElementById("discussion").style.display = "block";
+    document.getElementById("voting").style.display = "none";
+
+
+    const timerDisplay = document.getElementById("discussionTimer");
+    let timeLeft = discussionTime * 60; // seconds
+
+    // First render immediately
+    timerDisplay.innerText = `Time left: ${timeLeft}s`;
+    document.getElementById("discussionMessage").innerText = message;
+
+    const playerListDiv = document.getElementById("votingList");
+    playerListDiv.innerHTML = ""; // clear previous entries
+    console.log("playerListDiv:", playerListDiv);
+
+    alivePlayers.forEach(player => {
+        const btn = document.createElement("button");
+        btn.innerText = player.name;
+
+        btn.onclick = () => {
+            try {
+                selectedPlayerId = player.id;
+                highlightSelectionVoting(player.name);
+                console.log(`Selected player: ${player.name} (ID: ${player.id})`);
+            } catch (err) {
+                console.error("Error during button click assignment:", err);
+            }
+        };
+
+        console.log(`Adding player button for: ${player.name} (ID: ${player.id})`);
+        playerListDiv.appendChild(btn);
+    });
+
+    // Clear any old intervals in case a timer was already running
+    if (window.discussionTimer) {
+        clearInterval(window.discussionTimer);
+    }
+
+    // Start the countdown
+    window.discussionTimer = setInterval(() => {
+        timeLeft--;
+
+        if (timeLeft <= 0) {
+            clearInterval(window.discussionTimer);
+            
+            discussionOver();
+        } else {
+            timerDisplay.innerText = `Time left: ${timeLeft}s`;
+        }
+    }, 1000);
+});
+
+function discussionOver() {
+    console.log("Discussion over");
+    socket.emit("discussionOver", roomCode);
+
+    document.getElementById("discussion").style.display = "none";
+    document.getElementById("voting").style.display = "block";
+}
 
 let investigatedPlayer = false;
 
@@ -242,10 +313,28 @@ function showActionUI(role){
             document.getElementById("currentTurn").style.display = "block";
             break;
     }
+    if(!isAliveStatus) {
+        document.getElementById("roleDisplay").style.display = "none";
+        document.getElementById("currentTurn").style.display = "block";
+    }
 }
 
 function highlightSelection(playerName) {
   const buttons = document.querySelectorAll("#playerList2 button");
+
+  buttons.forEach(btn => {
+    // Remove previous highlights
+    btn.classList.remove("selected");
+
+    // Highlight only the selected one
+    if (btn.innerText.trim() === playerName.trim()) {
+      btn.classList.add("selected");
+    }
+  });
+}
+
+function highlightSelectionVoting(playerName) {
+  const buttons = document.querySelectorAll("#votingList button");
 
   buttons.forEach(btn => {
     // Remove previous highlights
