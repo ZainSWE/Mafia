@@ -147,6 +147,8 @@ io.on("connection", (socket) => {
         rooms[roomCode].numDetectives = numDetectives; 
         rooms[roomCode].numAngels = numAngels;
         rooms[roomCode].actions = []; // Reset actions for the new game
+        rooms[roomCode].votes = {}; // Reset votes for the new game
+        rooms[roomCode].night = 0; // Reset night count
 
         console.log(`Game started in room ${roomCode} with discussionTime: ${discussionTime}, numMurderers: ${numMurderers}, numDetectives: ${numDetectives}, numAngels: ${numAngels}`);
 
@@ -202,14 +204,24 @@ io.on("connection", (socket) => {
         const room = rooms[roomCode];
         room.players[playerId].ready = ready;
 
-        const allReady = Object.values(room.players).every(p => p.ready);
+        let alivePlayers = Object.values(room.players).filter(p => p.isAlive);
+
+        const allReady = alivePlayers.every(p => p.ready);
 
         if (allReady) {
             // Broadcast phase change to all players in the room
             console.log(`All players are ready in room ${roomCode}. Starting ${phase} phase.`);
             startNightPhase(roomCode); // Start the night phase
-            room.night = 1;
+            room.night++;
+            room.actions = []; // Reset actions for the new night phase
+            room.votes = {}; // Reset votes for the new day phase
             sendTurnToRole(roomCode, "m");
+
+            for (let playerId in room.players) {
+                const player = room.players[playerId];
+                player.hasSubmittedAction = false; // Reset action submission status for the new night phase
+                player.ready = false; // Reset ready status for the new night phase
+            }
         }
     });
 
@@ -240,6 +252,66 @@ io.on("connection", (socket) => {
 
         // Here you can send the result back to the detective
         callback({ success: true, role: player.role, name: player.name });
+    });
+
+    socket.on('submitVote', ({ roomCode, target }) => {
+        const playerId = socketToPlayerId[socket.id].playerId;
+        const room = rooms[roomCode];
+
+        if (!room.votes) {
+            room.votes = {};
+        }
+
+        room.votes[playerId] = target; // Store the vote
+
+        console.log(`Player ${playerId} voted for ${target} in room ${roomCode}`);
+
+        // Get list of alive players
+        let alivePlayers = Object.entries(room.players).filter(([id, player]) => player.isAlive);
+
+        if (Object.keys(room.votes).length === alivePlayers.length) {
+            console.log(`All players have voted in room ${roomCode}. Resolving votes...`);
+
+            // Count votes for alive players
+            let voteCounts = {};
+            alivePlayers.forEach(([id, player]) => {
+                voteCounts[id] = 0; // Initialize with 0 votes
+            });
+
+            for (let voterId in room.votes) {
+                let targetId = room.votes[voterId];
+                if (voteCounts.hasOwnProperty(targetId)) {
+                    voteCounts[targetId]++;
+                }
+            }
+
+            // Format result as array of { name, voteCount }
+            let results = alivePlayers.map(([id, player]) => ({
+                name: player.name,
+                voteCount: voteCounts[id]
+            }));
+
+            // Sort results by vote count in descending order
+            results.sort((a, b) => b.voteCount - a.voteCount);
+
+            console.log(`Vote results for room ${roomCode}:`, results);
+
+            let votedOut;
+            let votedOutRole;
+
+            if(!(results[0].voteCount == results[1].voteCount)) {
+                // If there's a clear winner, kill that player
+                votedOut = results[0].name;
+                votedOutRole = rooms[roomCode].players[Object.keys(room.players).find(id => room.players[id].name === votedOut)].role;
+                room.players[Object.keys(room.players).find(id => room.players[id].name === votedOut)].isAlive = false;
+                console.log(`Player ${votedOut} has been voted out.`);
+            } else {
+                // If there's a tie, no one is voted out
+                console.log("No one was voted out due to a tie.");
+            }
+ 
+            io.to(roomCode).emit('voteResult', results, votedOut, votedOutRole);
+        }
     });
 });
 

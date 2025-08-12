@@ -27,7 +27,7 @@ function hostGame(){
     }
 
     const username = document.getElementById("playerNameHost").value;
-    localStorage.setItem('playerName', username);
+    localStorage.setItem('username', username);
     const isHost = true;
     const roomCode = null;
 
@@ -56,7 +56,7 @@ function joinGame() {
 
     const roomCode = document.getElementById("roomCode").value;
     const username = document.getElementById("playerNameJoin").value;
-    localStorage.setItem('playerName', username);
+    localStorage.setItem('username', username);
 
     const isHost = false;
 

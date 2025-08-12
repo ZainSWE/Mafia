@@ -69,7 +69,7 @@
 
         <div id="currentTurn"></div>
 
-        <div id="roleDisplay" style="display: none">
+        <div id="roleDisplay" class="alive-only" style="display: none">
             <p id="roleAction"></p>
             <p id="roleInfo"></p>
             <div id="playerList2"></div>
@@ -87,11 +87,26 @@
 
         <div id="voting" style="display: none">
             <h2>Voting phase</h2>
-            <div id="voteDisplay">
+            <div id="voteDisplay" class="alive-only">
                 <h3>Vote for a player to eliminate</h3>
                 <div id="votingList"></div>
                 <button id="submitVote">Submit Vote</button>
                 <h2>Warning: If you click Submit you cannot change your vote!</h2>
+            </div>
+            
+            <div id="voteDone" style="display: none">
+                <h2>Waiting for others to vote...</h2>
+            </div>
+
+            <div id="voteResults" style="display: none">
+                <h2>Vote Results</h2>
+                <div id="voteResultList"></div>
+                <h3 id="votedOutMessage"></h3>
+
+                <div id="readyUpSection" class="alive-only">
+                    <button id="readyButtonVote">Ready Up</button>
+                    <p id="statusText"></p>
+                </div>
             </div>
         </div>
     </div>

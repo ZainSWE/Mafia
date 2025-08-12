@@ -1,5 +1,6 @@
 const roomCode = localStorage.getItem('roomCode') || '';
 const isHost = localStorage.getItem('isHost');
+const username = localStorage.getItem('username') || '';
 
 let playerCount = 0;
 let isReady = false;
@@ -94,6 +95,7 @@ socket.on('playerListUpdate', (players) => {
 });
 
 socket.on('gameStarted', (data) => {
+    isReady = false; // Set ready status to true when game starts
     const { roomCode, role } = data;
     console.log(`Game started in room ${roomCode} with role: ${role}`);
     localStorage.setItem('role', role);
@@ -193,6 +195,7 @@ socket.on("dayPhaseInfo", ({message, discussionTime, alivePlayers, isAlive}) => 
         document.getElementById("dead").style.display = "block";
         document.getElementById("dead").innerText = "You are dead! You can no longer participate in the game.";
         document.getElementById("voteDisplay").style.display = "none";
+        hideAliveOnlySections();
         isAliveStatus = false;
     }
 
@@ -203,7 +206,7 @@ socket.on("dayPhaseInfo", ({message, discussionTime, alivePlayers, isAlive}) => 
 
 
     const timerDisplay = document.getElementById("discussionTimer");
-    let timeLeft = discussionTime * 60; // seconds
+    let timeLeft = discussionTime * 10; // seconds
 
     // First render immediately
     timerDisplay.innerText = `Time left: ${timeLeft}s`;
@@ -250,12 +253,42 @@ socket.on("dayPhaseInfo", ({message, discussionTime, alivePlayers, isAlive}) => 
     }, 1000);
 });
 
+socket.on("voteResult", (results, votedOut, votedOutRole) => {
+    console.log("Voted out player:", votedOut, "Username:", username);
+    if(votedOut === username) {
+        document.getElementById("dead").style.display = "block";
+        document.getElementById("dead").innerText = "You have been voted out! You can no longer participate in the game.";
+
+        hideAliveOnlySections();
+
+        isAliveStatus = false;
+    }
+
+    console.log("Vote results:", results);
+
+    document.getElementById("voteDone").style.display = "none";
+    document.getElementById("voteResults").style.display = "block";
+
+    const voteResultList = document.getElementById("voteResultList");
+    voteDisplay.innerHTML = ""; // Clear previous votes
+
+    results.forEach(result => {
+        const li = document.createElement('li');
+        li.textContent = `${result.name}: ${result.voteCount} vote(s)`;
+        voteResultList.appendChild(li);
+    });
+
+    document.getElementById("votedOutMessage").innerText = votedOut ? `${votedOut} has been voted out! They were a ${votedOutRole}.` : "No one was voted out.";
+});
+
 function discussionOver() {
     console.log("Discussion over");
     socket.emit("discussionOver", roomCode);
 
     document.getElementById("discussion").style.display = "none";
     document.getElementById("voting").style.display = "block";
+    document.getElementById("voteDisplay").style.display = "block";
+    document.getElementById("voteDone").style.display = "none";
 }
 
 let investigatedPlayer = false;
@@ -290,6 +323,18 @@ document.getElementById("submitAction").onclick = () => {
     socket.emit("submitAction", { roomCode, target: selectedPlayerId });
 };
 
+document.getElementById("submitVote").onclick = () => {
+    if (!selectedPlayerId) {
+        alert("Choose a player first!");
+        return;
+    } 
+
+    document.getElementById("voteDisplay").style.display = "none";
+    document.getElementById("voteDone").style.display = "block";
+
+    socket.emit("submitVote", { roomCode, target: selectedPlayerId });
+};
+
 function showActionUI(role){
     console.log("Action shown for:", role)
     switch(role){
@@ -313,6 +358,7 @@ function showActionUI(role){
             document.getElementById("currentTurn").style.display = "block";
             break;
     }
+
     if(!isAliveStatus) {
         document.getElementById("roleDisplay").style.display = "none";
         document.getElementById("currentTurn").style.display = "block";
@@ -370,3 +416,23 @@ readyButton.addEventListener("click", () => {
     // Send ready status to server
     socket.emit("playerReady", { roomCode, playerId, ready: isReady, phase: "night" });
 });
+
+readyButtonVote.addEventListener("click", () => {
+    isReady = !isReady;
+
+    // Toggle visual class
+    readyButtonVote.classList.toggle("ready", isReady);
+
+    // Update button text
+    readyButtonVote.textContent = isReady ? "Ready ✅" : "Ready Up";
+
+    // Send ready status to server
+    socket.emit("playerReady", { roomCode, playerId, ready: isReady, phase: "night" });
+});
+
+function hideAliveOnlySections() {
+  const sections = document.querySelectorAll('.alive-only');
+  sections.forEach(section => {
+    section.classList.add('hidden');
+  });
+}

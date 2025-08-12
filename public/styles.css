@@ -218,6 +218,19 @@ body {
     border-radius: 50%; 
 }
 
+#readyButtonVote {
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 8px;
+    background-color: lightgray;
+  }
+
+#readyButtonVote.ready {
+    background-color: green;
+    color: white;
+    border-radius: 50%; 
+}
+
 .selected {
     background-color: #4CAF50; 
     color: white;              
@@ -226,4 +239,8 @@ body {
     box-shadow: 0 0 5px #388E3C; 
     transform: scale(1.05);   
     transition: all 0.2s ease;
+}
+
+.hidden {
+  display: none !important;
 }
