@@ -309,6 +309,20 @@ io.on("connection", (socket) => {
                 // If there's a tie, no one is voted out
                 console.log("No one was voted out due to a tie.");
             }
+
+            let aliveMurdererCount = Object.values(room.players).filter(p => p.isAlive && p.role === "m").length;
+            let alivePlayerCount = Object.values(room.players).filter(p => p.isAlive).length;
+
+            if(alivePlayerCount <= aliveMurdererCount) {
+                console.log(`${roomCode} Murderers win as last villager is voted out. Game Over.`);
+                io.to(roomCode).emit('gameOver', { winner: "m", message: `${votedOut} was a ${votedOutRole}! Murderers win as last villager is voted out!` });
+                return;
+            }
+            else if(aliveMurdererCount <= 0){
+                console.log(`${roomCode} Villagers win as the last murderer is voted out. Game Over.`);
+                io.to(roomCode).emit('gameOver', { winnder: "v", message: `${votedOut} was a ${votedOutRole}! Villagers win as last murderer is voted out!`});
+                return;
+            }
  
             io.to(roomCode).emit('voteResult', results, votedOut, votedOutRole);
         }
@@ -433,6 +447,15 @@ function resolveNightPhase(roomCode) {
         } else {
             message += `${room.players[targetId].name} was killed but an angel saved them!\n`;
         }
+    }
+
+    let alivePlayerCount = Object.values(room.players).filter(p => p.isAlive).length;
+    let aliveMurdererCount = Object.values(room.players).filter(p => p.isAlive && p.role === "m").length;
+
+    if(alivePlayerCount <= aliveMurdererCount) {
+        console.log(`The murderers have killed the last villager. Game over.`);
+        io.to(roomCode).emit('gameOver', { winner: "m", message: `The murderers have killed the last villagers! Game over!` });
+        return;
     }
 
     for(let player of Object.values(room.players)){

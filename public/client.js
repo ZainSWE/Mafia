@@ -281,6 +281,16 @@ socket.on("voteResult", (results, votedOut, votedOutRole) => {
     document.getElementById("votedOutMessage").innerText = votedOut ? `${votedOut} has been voted out! They were a ${votedOutRole}.` : "No one was voted out.";
 });
 
+socket.on("gameOver", ({ winner, message }) => {
+    console.log("Game Over:", message);
+
+    document.getElementById("day").style.display = "none";
+    document.getElementById("night").style.display = "none";
+    document.getElementById("dead").style.display = "none";
+    document.getElementById("gameOver").style.display = "block";
+    document.getElementById("gameOverMessage").innerText = message;
+});
+
 function discussionOver() {
     console.log("Discussion over");
     socket.emit("discussionOver", roomCode);
