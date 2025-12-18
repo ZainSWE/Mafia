@@ -185,12 +185,12 @@ socket.on("nightPhaseInfo", ({ role, alivePlayers, sameRolePlayers }) => {
     console.log("playerListDiv:", playerListDiv);
 
     alivePlayers.forEach(player => {
-        // Skip showing self
-        if (player.id === playerId) return;
+        // Skip showing self if not angel
+        if (player.id === playerId && role !== 'a') return;
 
         // Skip showing players with the same role 
         const isSameRole = sameRolePlayers.some(p => p.id === player.id);
-        if (isSameRole) return;
+        if (isSameRole && role !== 'a') return;
         
         const btn = document.createElement("button");
         btn.innerText = player.name;
