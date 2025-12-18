@@ -123,6 +123,19 @@ socket.on('gameStarted', (data) => {
 
 socket.on('yourTurn', ( role ) => {
     console.log("Its your turn with role:", role);
+
+    switch(role){
+        case 'm':
+            document.getElementById("currentTurn").innerText = 'It is the murderers turn';
+            break;
+        case 'd':
+            document.getElementById("currentTurn").innerText = 'It is the detectives turn';
+            break;
+        case 'a':
+            document.getElementById("currentTurn").innerText = 'It is the angels turn';
+            break;
+    }
+
     showActionUI(role);
 });
 
@@ -151,6 +164,13 @@ socket.on("nightPhaseInfo", ({ role, alivePlayers, sameRolePlayers }) => {
     document.getElementById("day").style.display = "none";
     document.getElementById("night").style.display = "block";
 
+    isReady = false;
+
+    // Toggle visual class
+    readyButtonVote.classList.toggle("ready", isReady);
+
+    // Update button text
+    readyButtonVote.textContent = isReady ? "Ready ✅" : "Ready Up";
 
     console.log("Alive players:", alivePlayers);
     console.log("Same role players:", sameRolePlayers);
@@ -203,6 +223,7 @@ socket.on("dayPhaseInfo", ({message, discussionTime, alivePlayers, isAlive}) => 
     document.getElementById("night").style.display = "none";
     document.getElementById("discussion").style.display = "block";
     document.getElementById("voting").style.display = "none";
+
 
 
     const timerDisplay = document.getElementById("discussionTimer");
@@ -269,8 +290,12 @@ socket.on("voteResult", (results, votedOut, votedOutRole) => {
     document.getElementById("voteDone").style.display = "none";
     document.getElementById("voteResults").style.display = "block";
 
+    if(!isAliveStatus) {
+        document.getElementById("readyUpSection").style.display = "none";
+    }
+
     const voteResultList = document.getElementById("voteResultList");
-    voteDisplay.innerHTML = ""; // Clear previous votes
+    voteResultList.innerHTML = ""; // Clear previous votes
 
     results.forEach(result => {
         const li = document.createElement('li');
@@ -297,8 +322,16 @@ function discussionOver() {
 
     document.getElementById("discussion").style.display = "none";
     document.getElementById("voting").style.display = "block";
-    document.getElementById("voteDisplay").style.display = "block";
-    document.getElementById("voteDone").style.display = "none";
+    if( isAliveStatus ){
+        document.getElementById("voteDisplay").style.display = "block";
+        document.getElementById("voteDone").style.display = "none";
+    }
+    else{
+        document.getElementById("voteDisplay").style.display = "none";
+        document.getElementById("voteDone").style.display = "block";
+    }
+    document.getElementById("voteResults").style.display = "none";
+    
 }
 
 let investigatedPlayer = false;
