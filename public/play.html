@@ -1,128 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mafia Game</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mafia Game</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="joinHost" class="page2" style="display: block">
-        <div class="options">
-            <input id="playerNameJoin" class="roomcode" type="text" placeholder="Username" />
-            <input id="roomCode" class="roomcode" type="text" placeholder="Room code" />
-            <button class="animateHand" onclick="joinGame()">Join Game</button>
-            <br>
-            <br>
-            <input id="playerNameHost" class="roomcode" type="text" placeholder="Username" />
-            <button class="animateHand" onclick="hostGame()">Host Game</button>
-        </div>
+  <!-- Join or Host Page -->
+  <div id="joinHost" style="display: block;">
+    <h1 class="heading">Join a game:</h1>
+    <input class="interactiveBox" id="playerNameJoin" type="text" placeholder="Username">
+    <input class="interactiveBox" id="roomCode" type="text" placeholder="Room Code">
+    <button class="redButton" id="joinButton" onclick="joinGame()">Join Game</button>
+    <h1 class="heading">Host a game:</h1>
+    <input class="interactiveBox" id="playerNameHost" type="text" placeholder="Username">
+    <button class="redButton" id="hostButton" onclick="hostGame()">Host Game</button>
+  </div>
 
-        <div class="animateHandContainer">
-            
-        </div>
+  <!-- Lobby -->
+  <div id="lobby" style="display: none;">
+    <h1>Game Room</h1>
+    <p id="roomInfo">Connecting...</p>
+
+    <div id="players">
+      <h2>Players</h2>
+      <ul id="playerList"></ul>
     </div>
 
-    <div id="lobby" style="display: none">
-        <h1>Game Room</h1>
-        <p id="roomInfo">Connecting...</p>
-
-        <div id="players">
-        <h2>Players</h2>
-        <ul id="playerList">
-            <!-- Player list will be populated here -->
-        </ul>
-        </div>
-
-        <div id="leaveRoom">
-        <button onclick="leaveRoom()">Leave Room</button>
-        </div>
-
-        <div id="hostOptions" style="display: none;">
-            <h3>Host Settings</h3>
-            <div>
-                <h2>Game Settings</h2>
-                <p>Discussion Time in Minutes</p>
-                <input type="number" id="discussionTime" step="1" min="1" placeholder="Number" />
-                <p>Number of Murderers</p>
-                <input type="number" id="numMurderers" step="1" min="1" placeholder="Number" />
-                <p>Number of Detectives</p>
-                <input type="number" id="numDetectives" step="1" min="0" placeholder="Number" />
-                <p>Number of Angels</p>
-                <input type="number" id="numAngels" step="1" min="0" placeholder="Number" />
-            </div>
-            <br>
-            <button onclick="startGame()">Start Game</button>
-        </div>
+    <div id="leaveRoom">
+      <button onclick="leaveRoom()">Leave Room</button>
     </div>
 
-    <div id="cardView" style="display: none">
-        <h2>Village</h2>
-        <p id="role"></p>
+    <div id="hostOptions" style="display: none;">
+      <h3>Host Settings</h3>
+      <div>
+        <h2>Game Settings</h2>
+        <p>Discussion Time (minutes)</p>
+        <input class="interactiveBox" type="number" id="discussionTime" step="1" min="1" placeholder="Number">
+        <p>Number of Murderers</p>
+        <input class="interactiveBox" type="number" id="numMurderers" step="1" min="1" placeholder="Number">
+        <p>Number of Detectives</p>
+        <input class="interactiveBox" type="number" id="numDetectives" step="1" min="0" placeholder="Number">
+        <p>Number of Angels</p>
+        <input class="interactiveBox" type="number" id="numAngels" step="1" min="0" placeholder="Number">
+      </div>
+      <button class="redButton" onclick="startGame()">Start Game</button>
+    </div>
+  </div>
 
-        <button id="readyButton">Ready Up</button>
-        <p id="statusText"></p>
+  <!-- Role Card -->
+  <div id="cardView" style="display: none;">
+    <h2>Village</h2>
+    <p id="role"></p>
+    <button id="readyButton">Ready Up</button>
+    <p id="statusText"></p>
+  </div>
+
+  <!-- Night Phase -->
+  <div id="night" style="display: none;">
+    <h1>It's Nighttime</h1>
+    <div id="currentTurn"></div>
+
+    <div id="roleDisplay" style="display: none;">
+      <p id="roleAction"></p>
+      <p id="roleInfo"></p>
+      <div id="playerList2"></div>
+      <div id="investigateSection" style="display: none;"></div>
+      <button id="submitAction">Submit</button>
+    </div>
+  </div>
+
+  <!-- Day Phase -->
+  <div id="day" style="display: none;">
+    <div id="discussion">
+      <div id="discussionTimer"></div>
+      <p id="discussionMessage"></p>
     </div>
 
-    <div id="night" style="display: none">
-        <h1>Its Nighttime</h1>
+    <div id="voting" style="display: none;">
+      <h2>Voting Phase</h2>
 
-        <div id="currentTurn"></div>
+      <div id="voteDisplay">
+        <h3>Vote for a player to eliminate</h3>
+        <div id="votingList"></div>
+        <button id="submitVote">Submit Vote</button>
+        <h2>Warning: If you click Submit you cannot change your vote!</h2>
+      </div>
 
-        <div id="roleDisplay" class="alive-only" style="display: none">
-            <p id="roleAction"></p>
-            <p id="roleInfo"></p>
-            <div id="playerList2"></div>
-            <div id="investigateSection" style="display: none"></div>
-            <button id="submitAction">Submit</button>
+      <div id="voteDone" style="display: none;">
+        <h2>Waiting for others to vote...</h2>
+      </div>
+
+      <div id="voteResults" style="display: none;">
+        <h2>Vote Results</h2>
+        <div id="voteResultList"></div>
+        <h3 id="votedOutMessage"></h3>
+
+        <div id="readyUpSection">
+          <button id="readyButtonVote">Ready Up</button>
+          <p id="statusText"></p>
         </div>
-
+      </div>
     </div>
+  </div>
 
-    <div id="day" style="display: none">
-        <div id="discussion">
-            <div id="discussionTimer"></div>
-            <p id="discussionMessage"></p>
-        </div>
+  <!-- Dead Screen -->
+  <div id="dead" style="display: none;">
+    <h2>You have been eliminated</h2>
+    <p>Wait for the game to finish...</p>
+  </div>
 
-        <div id="voting" style="display: none">
-            <h2>Voting phase</h2>
-            <div id="voteDisplay" class="alive-only">
-                <h3>Vote for a player to eliminate</h3>
-                <div id="votingList"></div>
-                <button id="submitVote">Submit Vote</button>
-                <h2>Warning: If you click Submit you cannot change your vote!</h2>
-            </div>
-            
-            <div id="voteDone" style="display: none">
-                <h2>Waiting for others to vote...</h2>
-            </div>
+  <!-- Game Over -->
+  <div id="gameOver" style="display: none;">
+    <h1>Game Over</h1>
+    <p id="gameOverMessage"></p>
+    <button class="redButton" onclick="leaveRoom()">Leave Room</button>
+  </div>
 
-            <div id="voteResults" style="display: none">
-                <h2>Vote Results</h2>
-                <div id="voteResultList"></div>
-                <h3 id="votedOutMessage"></h3>
+  <script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
+  <script src="app.js"></script>
+  <style>
+    .redButton {
+      font-size: 20px;
+      padding: 10px 20px;
+      margin-top: 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 20rem;
+      background-color: white;
+      color: black;
+    }
 
-                <div id="readyUpSection" class="alive-only">
-                    <button id="readyButtonVote">Ready Up</button>
-                    <p id="statusText"></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="dead" style="display: none">
-
-    </div>
-
-    <div id="gameOver" style="display: none">
-        <h1>Game Over</h1>
-        <p id="gameOverMessage"></p>
-        <button onclick="leaveRoom()">Leave Room</button>
-    </div>
-    
-    <script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
-    <script src="app.js"></script>
+    .redButton:hover {
+      background-color: red;
+    }
+  </style>
 </body>
-
 </html>

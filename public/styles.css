@@ -1,74 +1,63 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     background-color: black;
-    font-family: sans-serif;
-}
-
-a {
     color: white;
-    text-decoration: none;
-    padding: 1rem;
 }
 
-a:hover {
-    transition-duration: 500ms;
-    background-color: white;
-    color: black;
-    padding: 1rem;
-    border-radius: 50rem;
-}
-
-.mainTitle {
-    display: flex;
-    justify-content: center;
-    font-size: 15rem;
-}
-
-.titleScreenButtons {
-    display: flex;
-    justify-content: center;
-    text-decoration: none;
+.nav-links {
     list-style-type: none;
-    gap: 2rem;
-    font-weight: 900;
+    margin: 0;
+    padding: 0;
 }
 
-@media (max-width: 480px) {
-    body {
-        color: white;
-        background-color: black;
-        font-family: sans-serif;
-    }
+.nav-links li {
+    margin: 0.5rem 0;
+}
 
-    a {
-        color: white;
-        text-decoration: none;
-        padding: 1rem;
-    }
+.nav-links a {
+    text-decoration: none;
+    color: white;
+}
 
-    a:hover {
-        background-color: black;
-        padding: 1rem;
-        border-radius: 50rem;
-    }
+.nav-links a:visited {
+    color: white;
+}
 
-    .mainTitle {
-        display: flex;
-        justify-content: center;
-        font-size: 5rem;
-    }
+.nav-links a:hover,
+.nav-links a:active {
+    text-decoration: none;
+    color: red;
+}
 
-    .titleScreenButtons {
-        display: flex;
-        justify-content: center;
-        text-decoration: none;
-        list-style-type: none;
-        flex-direction: column;
-        gap: 0rem;
-    }
+.main-title {
+    font-size: 128px;
+}
 
-    .titleScreenButtons li {
-        display: flex;
-        justify-content: center;
-    }
+.heading {
+    font-size: 24px;
+}
+
+.nav-links {
+    text-align: center;
+    font-weight: bold;
+}
+
+.interactiveBox {
+    font-size: 20px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 20rem;
+    border: none;
+    width: 200px;
+    text-align: center;
 }

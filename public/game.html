@@ -1,29 +1,29 @@
-<!-- game.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game Room</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <h1>Game Room</h1>
   <p id="roomInfo">Connecting...</p>
 
-    <div id="players">
-      <h2>Players</h2>
-      <ul id="playerList">
-        <!-- Player list will be populated here -->
-      </ul>
-    </div>
+  <div id="players">
+    <h2>Players</h2>
+    <ul id="playerList"></ul>
+  </div>
 
-    <div id="leaveRoom">
-      <button onclick="leaveRoom()">Leave Room</button>
-    </div>
+  <div id="leaveRoom">
+    <button onclick="leaveRoom()">Leave Room</button>
+  </div>
 
-    <div id="hostOptions" style="display: none;">
-        <h3>Host Settings</h3>
-        <button onclick="startGame()">Start Game</button>
-        <button onclick="changeRules()">Change Rules</button>
-    </div>
+  <div id="hostOptions" style="display: none;">
+    <h3>Host Settings</h3>
+    <button onclick="startGame()">Start Game</button>
+    <button onclick="changeRules()">Change Rules</button>
+  </div>
 
   <script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
   <script src="client.js"></script>

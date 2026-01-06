@@ -5,7 +5,10 @@
   "main": "server/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "devStart": "nodemon ./server/server.js"
+    "devStart": "nodemon ./server/server.js",
+    "watch": "nodemon",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -21,10 +24,14 @@
   "description": "",
   "dependencies": {
     "express": "^5.1.0",
+    "next": "^16.0.1",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "browser-sync": "^3.0.4",
+    "connect-livereload": "^0.6.1",
+    "livereload": "^0.10.3",
+    "nodemon": "^3.1.11"
   }
 }
