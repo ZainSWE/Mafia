@@ -1,0 +1,82 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'Joyride EXT';
+    src: url('../fonts/JOYRIDEEXT.OTF') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Joyride WIDE';
+    src: url('../fonts/JOYRIDEWIDE.OTF') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgb(16, 16, 16) 15%, rgb(46, 13, 13) 50%, rgb(84, 10, 10) 100%);
+    position: relative;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.background img {
+    width: 100vw;
+    height: auto;
+}
+
+header {
+    font-family: 'Joyride WIDE', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+header h1 {
+    font-size: 128px;
+    color: #101010;
+    letter-spacing: 8px;
+    margin-bottom: 10px;
+}
+
+header h3 {
+    font-size: 24px;
+}
+
+a {
+    font-family: 'Joyride EXT', sans-serif;
+    color: #101010;
+    text-decoration: none;
+    letter-spacing: 2px;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #530a0a;
+    cursor: pointer;
+}
