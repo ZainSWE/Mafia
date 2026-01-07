@@ -18,12 +18,36 @@
     font-style: normal;
 }
 
+@keyframes zoom-in {
+    0% {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes zoom-out {
+    0% {
+        transform: scale(2);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
 body {
     width: 100vw;
     height: 100vh;
     margin: 0;
     overflow: hidden;
-    background: linear-gradient(180deg, rgb(16, 16, 16) 15%, rgb(46, 13, 13) 50%, rgb(84, 10, 10) 100%);
+    background: linear-gradient(180deg, rgb(102, 5, 5) 0%, rgb(14, 5, 5) 100%);
     position: relative;
 }
 
@@ -36,11 +60,12 @@ body {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    z-index: 0;
+    animation: zoom-out 1000ms ease-out;
     overflow: hidden;
+    z-index: 0;
 }
 
-.background img {
+.background video {
     width: 100vw;
     height: auto;
 }
@@ -54,29 +79,31 @@ header {
     align-items: center;
     text-align: center;
     position: relative;
+    animation: zoom-in 800ms ease-out;
     z-index: 1;
 }
 
 header h1 {
     font-size: 128px;
-    color: #101010;
+    color: #090909;
     letter-spacing: 8px;
     margin-bottom: 10px;
 }
 
 header h3 {
     font-size: 24px;
+    margin-top: -1rem;
 }
 
 a {
     font-family: 'Joyride EXT', sans-serif;
-    color: #101010;
+    color: #090909;
     text-decoration: none;
     letter-spacing: 2px;
-    transition: color 0.3s ease;
+    transition: color 150ms ease;
 }
 
 a:hover {
-    color: #530a0a;
+    color: #ffffff;
     cursor: pointer;
 }
