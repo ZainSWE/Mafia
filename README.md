@@ -1,1 +1,1 @@
-Mafia game --- Work In Progress
+# Mafia Game (WIP)
