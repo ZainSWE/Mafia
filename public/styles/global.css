@@ -1,0 +1,43 @@
+@font-face {
+    font-family: 'Joyride EXT';
+    src: url('../fonts/JOYRIDEEXT.OTF') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Joyride WIDE';
+    src: url('../fonts/JOYRIDEWIDE.OTF') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100vw;
+    height: 100vh;
+}
+
+li {
+    list-style-type: none;
+}
+
+a {
+    display: inline-block;
+    color: #111111;
+    text-decoration: none;
+    transition: transform 200ms ease-in-out;
+}
+
+a:hover {
+    color: red;
+    transform: scale(1.1);
+}

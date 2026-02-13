@@ -1,0 +1,30 @@
+body {
+    background-color: #232323;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    font-family: 'Joyride EXT', sans-serif;
+}
+
+a {
+    font-size: 64px;
+}
+
+.main-title {
+    font-size: 128px;
+    display: flex;
+    color: red;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Joyride WIDE', sans-serif;
+    padding: 2rem;
+    margin-top: 4rem;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10rem;
+}
