@@ -41,3 +41,28 @@ a:hover {
     color: red;
     transform: scale(1.1);
 }
+
+button {
+    background-color: #111111;
+    color: white;
+    border: none;
+    height: 3rem;
+    width: 12rem;
+    border-radius: 100rem;
+    transition: transform 200ms ease-in-out;
+}
+
+button:hover {
+    background-color: red;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+input {
+    background-color: #111111;
+    color: white;
+    border: none;
+    height: 3rem;
+    width: 24rem;
+    padding: 1rem;
+}
