@@ -9,15 +9,32 @@
 </head>
 <body>
     <div class="background">
-        <!--<img src="images/title-screen/background3.png" alt="Spade">-->
-        <video autoplay loop muted>
+        <video autoplay loop muted playsinline>
             <source src="videos/title-screen/background.mp4" type="video/mp4">
             Your browser does not support the video tag
         </video>
     </div>
     <header>
         <h1>MAFIA</h1>
-        <h3><a href="home.html">click to start</a></h3>
+        <h3><a href="home.html" id="startLink">click to start</a></h3>
     </header>
+    
+    <audio id="title-screen-audio" loop>
+        <source src="audio/title-screen.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        // Play audio on user interaction
+        const audio = document.getElementById('title-screen-audio');
+        const startLink = document.getElementById('startLink');
+        
+        // Attempt autoplay
+        audio.play().catch(() => {
+            // If autoplay fails, play on first click anywhere
+            document.body.addEventListener('click', () => {
+                audio.play();
+            }, { once: true });
+        });
+    </script>
 </body>
 </html>
