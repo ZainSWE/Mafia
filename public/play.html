@@ -4,22 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mafia Game</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles/global.css">
+    <link rel="stylesheet" href="styles/play-screen.css">
 </head>
 <body>
-    <div id="joinHost" class="page2" style="display: block">
-        <div class="options">
-            <input id="playerNameJoin" class="roomcode" type="text" placeholder="Username" />
-            <input id="roomCode" class="roomcode" type="text" placeholder="Room code" />
-            <button class="animateHand" onclick="joinGame()">Join Game</button>
+    <div id="joinHost" class="screen-2">
+        <div class="join-host-screen">
+            <input id="playerNameJoin" class="input-var1" type="text" placeholder="Username" />
+            <input id="roomCode" class="input-var1" type="text" placeholder="Room code" />
+            <button class="button-var1" onclick="joinGame()">Join Game</button>
             <br>
             <br>
-            <input id="playerNameHost" class="roomcode" type="text" placeholder="Username" />
-            <button class="animateHand" onclick="hostGame()">Host Game</button>
-        </div>
-
-        <div class="animateHandContainer">
-            
+            <input id="playerNameHost" class="input-var1" type="text" placeholder="Username" />
+            <button class="button-var1" onclick="hostGame()">Host Game</button>
         </div>
     </div>
 
