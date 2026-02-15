@@ -1,0 +1,109 @@
+body {
+    background-color: #232323;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-family: 'InterTight Regular', sans-serif;
+}
+
+.card-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.flip-card {
+    background-color: transparent;
+    width: 325px;
+    height: 458px;
+    perspective: 1000px;
+    cursor: pointer;
+    border-radius: 12px;
+}
+
+.flip-card-front img {
+    width: 110%;
+    height: 110%;
+    object-fit: cover;
+    border-radius: 12px;
+    position: relative;
+    left: -5%;
+    top: -5%;
+}
+
+.flip-card-back img {
+    width: 256px;
+    height: 256px;
+    border-radius: 12px;
+}
+
+.flip-card-back ul {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.flip-card a {
+    font-family: 'InterTight Bold', sans-serif;
+    font-size: 24px;
+}
+
+.flip-card h1 {
+    font-family: 'InterTight Bold', sans-serif;
+    display: inline-block;
+    font-size: 36px;
+    margin-bottom: 0.5rem;
+}
+
+.flip-card p {
+    font-size: 16px;
+    margin: 0.25rem 0;
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.flip-card-front {
+    background-color: transparent;
+    color: black;
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.flip-card-back {
+    background-color: #faf6f4;
+    color: black;
+    transform: rotateY(180deg);
+    padding: 2rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
